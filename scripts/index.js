@@ -14,8 +14,37 @@
         - Total due
 */
 
-window.onload = function (event) {
+window.onload = function () {
   let rentalForm = document.querySelector("#rentalForm");
-  event.preventDefault();
-  alert("hello from car rental fees");
+  rentalForm.addEventListener("submit", calcCarRentalFees);
 };
+
+function calcCarRentalFees(event) {
+  event.preventDefault();
+
+  let theForm = event.target;
+  let totalCarRentalFees = 29.99 * Number(theForm.numDays.value);
+  let optionsCost = 0;
+  if (theForm.tollTag.checked) {
+    optionsCost += 3.95;
+  }
+  if (theForm.gps.checked) {
+    optionsCost += 2.95;
+  }
+  if (theForm.rsa.checked) {
+    optionsCost += 2.95;
+  }
+  let ageSurcharge = 0;
+  if (theForm.under25.value === "yes") {
+    ageSurcharge = totalCarRentalFees * (30 / 100);
+  }
+
+  let totalDue = totalCarRentalFees + optionsCost + ageSurcharge;
+
+  let message = `<div> Car Rental Cost: $${totalCarRentalFees.toFixed(2)}</div>
+  <div> Options Cost:v $${optionsCost.toFixed(2)}</div>
+  <div> Under 25  Surcharge: $${ageSurcharge.toFixed(2)}</div>
+  <div class="mt-5"> Total Due: $${totalDue.toFixed(2)}</div>`;
+
+  document.querySelector("#results").innerHtml = message;
+}
